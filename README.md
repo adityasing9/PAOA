@@ -2,138 +2,143 @@
 
 > *"An AI that knows how I normally live and helps me decide what to do next."*
 
-[![Platform](https://img.shields.io/badge/Platform-Android-3DDC84.svg?style=flat&logo=android)](https://www.android.com)
-[![Architecture](https://img.shields.io/badge/Architecture-Local--First-blue.svg)](./ARCHITECTURE.md)
+[![Live PWA](https://img.shields.io/badge/Live%20PWA-paoa--ai.vercel.app-00F0FF.svg?style=flat&logo=vercel)](https://paoa-ai.vercel.app)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-blue.svg?logo=github)](https://adityasing9.github.io/PAOA/)
+[![Android Release](https://img.shields.io/badge/Android%20APK-v1.0.0-3DDC84.svg?style=flat&logo=android)](https://github.com/adityasing9/PAOA/releases)
+[![AI Engine](https://img.shields.io/badge/AI-Gemini%202.0%20Flash%20(Free)-6366F1.svg)](https://aistudio.google.com)
 [![Operating Cost](https://img.shields.io/badge/Cost-₹0%20Zero--Cost-brightgreen.svg)](#zero-cost-guarantee)
 [![License](https://img.shields.io/badge/License-MIT-purple.svg)](./LICENSE)
 
-PAOA (Personal AI Operating Assistant) is a **local-first, offline-capable, zero-cost AI companion, dynamic scheduler, and productivity manager** built natively for Android.
+PAOA (Personal AI Operating Assistant) is a **local-first, zero-cost AI companion, dynamic scheduler, and productivity manager**. Available both as a high-performance **Progressive Web App (PWA)** installable on any phone or laptop, and as a **native Android application**.
 
-Unlike standard to-do lists, calendar apps, or cloud chatbots, PAOA continuously learns your daily routine, respects your social life, adapts when your day changes, sets precise alarms and reminders, and answers your most critical question with explainable logic:
+Unlike simple to-do lists, calendar apps, or generic cloud chatbots, PAOA learns your personal daily rhythm, respects your social life, adapts dynamically when your day changes, plans conflict-free schedules, and answers your most critical question with explainable logic:
 
 > **"What should I do now?"**
 
 ---
 
-## 🌟 Key Features
+## ⚡ Live Deployments & Downloads
 
-### 1. 🧠 Layered On-Device AI Pipeline
-- **₹0 Operating Cost**: No OpenAI/Gemini/Anthropic API keys required. No cloud subscriptions.
-- **Layer 1: Deterministic Engine**: 0ms instant execution for commands like *"Move DSA to tomorrow"* or *"Mark DBMS complete"*.
-- **Layer 2: Lightweight NLP Parser**: Local natural-language entity extraction for dates, times, durations, and priorities.
-- **Layer 3: Local AI & Heuristic Reasoning**: High-level conversational advice with immediate fallback.
-- **Decoupled Architecture**: AI extracts structured *intent*; our dedicated **Constraint Satisfaction Scheduler** manages the calendar.
-
-### 2. 📅 Smart Scheduling & Dynamic Rescheduling
-- **Human-Centric Optimization**: Optimizes for realistic completion and user wellbeing, rather than packing every minute.
-- **Dynamic Rescheduling**: When life happens (*"I'm going out with friends from 5 to 8"*), PAOA protects hard deadlines, splits long study blocks, moves flexible items, and explains why.
-- **Social Life is Not a Failure**: Entertainment, fatigue, family, and social outings are treated as legitimate life events.
-- **Task Splitting**: Automatically splits $>90$m tasks into focused blocks if your history indicates high postponement for marathon sessions.
-- **Explainability**: Every placed task has a clear reason (e.g. *"Scheduled at 6 PM because you complete study sessions 42% more reliably then"*).
-
-### 3. 🎙️ On-Device Conversational Voice Assistant
-- Powered by native Android `SpeechRecognizer` and `TextToSpeech`.
-- Offline voice recognition support (via offline speech packs).
-- Conversational context across multiple turns without paid voice APIs.
-
-### 4. 🪞 Personal Memory & Digital Twin
-- Remembers wake/sleep routines, preferred study hours, and average completion speed.
-- Completely transparent: Inspect everything in **"What I Know About You"**.
-- One-tap correction: Say *"I don't like studying in the morning anymore"* to instantly update your model.
-
-### 5. 📊 Non-Judgmental Insights & Procrastination Analysis
-- Kept strictly off the calm Home screen.
-- Tracks **Planned vs Actual** (start time delays and duration overruns).
-- Identifies postponement patterns neutrally without guilt or shaming.
-
-### 6. 🔒 Strict Privacy & Local Storage
-- Purely local SQLite Room database on your device.
-- Cryptographically protected via Android Keystore.
-- Complete data export (JSON) and one-tap data wipe.
+| Platform | Access Link | Description |
+| :--- | :--- | :--- |
+| 🌐 **Live Web App (PWA)** | **[paoa-ai.vercel.app](https://paoa-ai.vercel.app)** | Runs in any browser on phone/PC. 1-tap **"Add to Home Screen"** to install like a native app with zero download warnings. |
+| 📱 **Android Debug APK** | **[Download APK v1.0.0](https://github.com/adityasing9/PAOA/releases/download/v1.0.0/app-debug.apk)** | Native Android build with Room SQLite, background alarms, and offline speech recognition. |
+| 📦 **GitHub Releases** | **[PAOA Releases](https://github.com/adityasing9/PAOA/releases)** | Automated CI/CD builds compiled on every push. |
+| 📄 **GitHub Pages Mirror** | **[adityasing9.github.io/PAOA](https://adityasing9.github.io/PAOA/)** | Static PWA mirror hosted directly on GitHub Pages. |
 
 ---
 
-## 📱 Navigation & Screen Structure
+## 🌟 Core Superpowers
 
-1. **Home**: Calm, minimal dashboard showing *What Should I Do Now?*, *Next Activity*, *Today's Progress*, and *Quick Mic*.
-2. **Assistant**: Conversational interface with voice and text, suggested prompts, and intent history.
-3. **Calendar**: Unified Day, 3-Day, Week, and Month views synchronized with the scheduler.
-4. **Insights**: Deep analytics (Productivity, Planned vs Actual, Postponement Patterns, Digital Twin habits).
-5. **Settings**: Voice settings, Scheduling buffers, Permissions & Device Controls, and Data Export/Purge.
+### 1. 🤖 Dual-Brain AI (Free Gemini 2.0 Flash + Offline Fallback)
+- **₹0 Operating Cost**: Uses Google AI Studio's 100% free Gemini 2.0 Flash / 1.5 Flash tier (no credit card or billing required).
+- **True Conversational Intelligence**: Multi-turn dialogue memory. Say *"split it"*, *"move that earlier"*, or *"why did you place that there?"*.
+- **Direct Action Execution**: The AI reasons conversationally and outputs structured scheduling actions (`SCHEDULE_TASK`, `RESCHEDULE_TASK`, `DELETE_TASK`, `COMPLETE_TASK`, `SET_UNAVAILABLE`, `UPDATE_PREFERENCE`).
+- **Offline Rule Fallback**: When offline or without an API key, the deterministic pattern engine handles commands and scheduling without crashing.
+
+### 2. 📅 Visual Day Timeline & Dynamic Scheduler
+- **Visual Schedule (7:00 AM – 11:30 PM)**: Interactive color-coded timeline with a **live glowing time tracker**.
+- **Human-Centric Optimization**: Optimizes for realistic completion rather than packing every second with unrealistic blocks.
+- **Dynamic Rescheduling**: Life happens (*"I'm going out with friends from 5 to 8"*). PAOA automatically marks the block unavailable, protects hard deadlines, moves flexible items, and explains its rationale.
+- **Buffer Rules**: Enforces user-configurable rest buffers (default: 15 mins) before and after deep work blocks.
+- **Explainable Decisions**: Tap any block to read why it was scheduled (e.g. *"Placed during your peak focus window (17:00 - 20:00) with a 15-minute rest buffer"*).
+
+### 3. 🎙️ Natural Voice Interaction
+- **PWA (Web Speech API)**: Tap the microphone to talk with animated live sound waves; responses are read back using natural Text-to-Speech with 1-tap mute control.
+- **Android**: Native `SpeechRecognizer` and `TextToSpeech` with offline pack support.
+
+### 4. 🪞 Digital Twin & Personal Memory
+- Remembers wake/sleep routines, peak focus hours, average session lengths, and procrastination patterns.
+- Completely transparent: Inspect and edit your memory facts in **"What I Know About You"**.
+- One-tap updates: Say *"I don't like studying in the morning anymore"* to adapt future schedule placements.
+
+### 5. 🔒 Complete Privacy & Data Sovereignty
+- 100% local persistence (`localStorage` / IndexedDB on PWA, encrypted SQLite Room on Android).
+- Zero third-party telemetry, trackers, or hidden backends.
+- **Export Data (JSON)** and **Purge All Data** buttons available at any time.
 
 ---
 
-## 🏗️ Architecture & Technology Stack
+## 🗂️ Project Structure
 
 ```
-Android App (Kotlin + Jetpack Compose Material 3)
-   ├── core/ai          (Deterministic Parser, NLP Entity Extractor, Intent Router)
-   ├── core/scheduler   (Constraint Satisfaction Solver, Dynamic Rescheduler, Explainability)
-   ├── core/context     (Context Engine, Energy Matrix, Availability Windows)
-   ├── core/memory      (Personal Memory Store, Digital Twin Model, Learning Engine)
-   ├── core/reminders   (AlarmManager, NotificationManager, Inexact Fallback)
-   ├── core/voice       (Android SpeechRecognizer, TextToSpeech Engine)
-   ├── core/analytics   (Planned vs Actual Tracker, Procrastination Analyzer)
-   ├── core/database    (Room Database, SQLite Entities & DAOs)
-   └── ui/              (MVI ViewModels, Compose Screens & Components)
+PAOA/
+├── pwa/                         # Progressive Web App (React 18 + Vite + TypeScript + Tailwind CSS v4)
+│   ├── src/
+│   │   ├── components/          # AssistantView, ScheduleView, TasksView, DigitalTwinView, Navbar
+│   │   ├── services/            # gemini.ts, scheduler.ts, speech.ts, storage.ts
+│   │   └── types/               # Task, ScheduleBlock, DigitalTwinProfile, ChatMessage
+│   ├── public/                  # manifest.json, sw.js (Service Worker), icon.svg
+│   └── package.json
+│
+├── app/                         # Native Android Application (Kotlin + Jetpack Compose Material 3)
+│   ├── src/main/java/com/paoa/
+│   │   ├── core/ai/             # GeminiClient, DeterministicCommandEngine, IntentRouter
+│   │   ├── core/scheduler/      # SmartSchedulingEngine, DynamicRescheduler
+│   │   ├── core/reminders/      # AlarmScheduler, NotificationCoordinator
+│   │   ├── data/local/          # PAOADatabase, Room DAOs, SQLite Entities
+│   │   └── ui/screens/          # Assistant, Calendar, Home, Insights, Settings
+│   └── build.gradle.kts
+│
+└── .github/workflows/           # CI/CD Workflows
+    ├── build-apk.yml            # Compiles and publishes Android APK to GitHub Releases
+    └── deploy-pwa.yml           # Automatically builds and deploys PWA to GitHub Pages
 ```
-
-For complete technical specifications, see:
-- [ARCHITECTURE.md](./ARCHITECTURE.md)
-- [SCHEDULER.md](./SCHEDULER.md)
-- [DATABASE.md](./DATABASE.md)
-- [AI.md](./AI.md)
-- [VOICE.md](./VOICE.md)
-- [PRIVACY.md](./PRIVACY.md)
-- [ANDROID_PERMISSIONS.md](./ANDROID_PERMISSIONS.md)
-- [TESTING.md](./TESTING.md)
-- [ROADMAP.md](./ROADMAP.md)
 
 ---
 
-## 🛠️ Build & Installation Setup
+## 🚀 Running the PWA Locally
 
 ### Prerequisites
-- **JDK**: Java 17+ (e.g. Microsoft OpenJDK 17)
-- **Android SDK**: API Level 34 (Android 14) / Min SDK 26 (Android 8.0)
-- **Gradle**: 8.2+
+- [Node.js](https://nodejs.org/) v18+ and `npm`
 
 ### Quick Start
 ```bash
 # Clone the repository
-git clone https://github.com/adityasing9/SettleHub.git paoa
-cd paoa
+git clone https://github.com/adityasing9/PAOA.git
+cd PAOA/pwa
 
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev -- --host
+```
+
+Open `http://localhost:5173/` in your browser. On your mobile phone connected to the same Wi-Fi, open the displayed network address (e.g. `http://192.168.x.x:5173/`) and tap **"Add to Home Screen"**!
+
+---
+
+## 📱 Building the Android App
+
+### Prerequisites
+- **JDK 17+** (e.g. OpenJDK 17)
+- **Android SDK** API 34 (Android 14) / Min SDK 26
+
+### Quick Start
+```bash
 # Build debug APK
 ./gradlew assembleDebug
 
-# Run unit tests
-./gradlew test
+# Run unit test suite (30 automated tests)
+./gradlew testDebugUnitTest
 
-# Install on connected device
+# Install directly on connected device (ADB)
 ./gradlew installDebug
 ```
 
----
-
-## ⚠️ Important Android Limitations
-
-- **Exact Alarms**: Exact alarms require user approval under Android 12+ (`SCHEDULE_EXACT_ALARM`). PAOA gracefully falls back to standard notifications if denied.
-- **Battery Optimization**: Aggressive manufacturer task killers (MIUI, OneUI) may suppress background alerts. PAOA provides instructions in the Permissions screen to whitelist the app.
-- **Usage Statistics**: App screen time tracking requires explicit grant in Android Special App Access.
+The compiled APK will be located at `app/build/outputs/apk/debug/app-debug.apk`.
 
 ---
 
-## 🗺️ Roadmap & Future Enhancements
+## 💡 How to Connect Your Free Gemini AI Key
 
-- [x] On-device MVI Architecture & Room Database
-- [x] Deterministic NLP & Entity Extraction
-- [x] Dynamic Scheduling & Task Splitting
-- [x] Native Voice STT & Spoken TTS Engine
-- [x] Planned vs Actual Behavioral Learning
-- [x] Privacy Export & Keystore Security
-- [ ] Optional Encrypted WebDAV / Nextcloud Backup
-- [ ] WearOS Companion Tile
+1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey) and sign in with your Google account.
+2. Tap **"Create API key"** and copy the generated key. (It is 100% free with no credit card required).
+3. Open PAOA:
+   - On the PWA: Open the **Digital Twin** tab, paste your key, and tap **"Save & Test"**.
+   - On Android: Open the **Settings** screen, paste your key, and tap **"Save & Test"**.
+4. You will see `✓ Connected to Gemini 2.0 Flash` activate immediately!
 
 ---
 
