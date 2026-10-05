@@ -64,3 +64,10 @@ Thumbs.db
 *.key
 google-services.json
 secrets.properties
+
+# Web & PWA
+node_modules/
+pwa/node_modules/
+dist/
+pwa/dist/
+.tmp/
