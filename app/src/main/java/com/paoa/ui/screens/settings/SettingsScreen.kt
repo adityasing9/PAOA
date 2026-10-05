@@ -81,6 +81,133 @@ fun SettingsScreen(
             }
         }
 
+        // Section: AI BRAIN & FREE GEMINI KEY
+        Text(
+            text = "AI INTELLIGENCE & CLOUD PROVIDER",
+            style = MaterialTheme.typography.labelSmall,
+            color = TextSecondary,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        Card(
+            shape = RoundedCornerShape(14.dp),
+            colors = CardDefaults.cardColors(containerColor = SurfaceDark),
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(1.dp, if (state.geminiApiKey.isNotBlank()) PrimaryCyan.copy(alpha = 0.5f) else SurfaceBorderDark, RoundedCornerShape(14.dp))
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Psychology,
+                            contentDescription = null,
+                            tint = if (state.geminiApiKey.isNotBlank()) PrimaryCyan else TextSecondary,
+                            modifier = Modifier.size(22.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = if (state.geminiApiKey.isNotBlank()) "Gemini 2.0 Flash (Free AI)" else "Offline Rules Engine",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = TextPrimary
+                        )
+                    }
+
+                    if (state.geminiApiKey.isNotBlank()) {
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = PrimaryCyan.copy(alpha = 0.2f)
+                        ) {
+                            Text(
+                                text = "ACTIVE",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = PrimaryCyan,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+                }
+
+                Text(
+                    text = "Google AI Studio provides free Gemini 2.0 Flash API keys ($0/₹0, no credit card or payment needed). When enabled, PAOA reasons through your schedule, converses with full context, and dynamically plans tasks.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextMuted,
+                    modifier = Modifier.padding(top = 8.dp, bottom = 12.dp)
+                )
+
+                var apiKeyInput by remember(state.geminiApiKey) { mutableStateOf(state.geminiApiKey) }
+                val context = androidx.compose.ui.platform.LocalContext.current
+
+                OutlinedTextField(
+                    value = apiKeyInput,
+                    onValueChange = { apiKeyInput = it },
+                    label = { Text("Gemini API Key") },
+                    placeholder = { Text("AIzaSy...") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = PrimaryCyan,
+                        unfocusedBorderColor = SurfaceBorderDark,
+                        focusedTextColor = TextPrimary,
+                        unfocusedTextColor = TextPrimary,
+                        cursorColor = PrimaryCyan
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedButton(
+                        onClick = {
+                            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://aistudio.google.com/app/apikey"))
+                            context.startActivity(intent)
+                        },
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = TextPrimary),
+                        border = ButtonDefaults.outlinedButtonBorder.copy(
+                            brush = androidx.compose.ui.graphics.SolidColor(SurfaceBorderDark)
+                        ),
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Get Free Key ↗", style = MaterialTheme.typography.labelSmall)
+                    }
+
+                    Button(
+                        onClick = { viewModel.testGeminiApiKey(apiKeyInput) },
+                        enabled = !state.isTestingKey && apiKeyInput.isNotBlank(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = PrimaryCyan,
+                            contentColor = BackgroundDark
+                        ),
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        if (state.isTestingKey) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(16.dp),
+                                color = BackgroundDark,
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Text("Save & Test", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
         // Section: REMINDER MODE
         Text(
             text = "DEFAULT REMINDER MODE",

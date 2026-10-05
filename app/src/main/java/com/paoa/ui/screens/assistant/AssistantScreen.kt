@@ -45,7 +45,11 @@ fun AssistantScreen(
         "How productive was I today?"
     )
 
-    LaunchedEffect(state.messages.size) {
+    LaunchedEffect(Unit) {
+        viewModel.refreshApiKeyStatus()
+    }
+
+    LaunchedEffect(state.messages.size, state.isThinking) {
         if (state.messages.isNotEmpty()) {
             listState.animateScrollToItem(state.messages.size - 1)
         }
@@ -67,7 +71,7 @@ fun AssistantScreen(
                 modifier = Modifier
                     .size(10.dp)
                     .clip(CircleShape)
-                    .background(PrimaryCyan)
+                    .background(if (state.hasApiKey) PrimaryCyan else TextMuted)
             )
             Spacer(modifier = Modifier.width(10.dp))
             Column {
@@ -78,14 +82,33 @@ fun AssistantScreen(
                     color = TextPrimary
                 )
                 Text(
-                    text = if (state.isListening) "Listening..." else "Local-first • Always offline",
+                    text = if (state.isListening) "Listening..." else if (state.hasApiKey) "Powered by Gemini 2.0 Flash (Free)" else "Local-first • Offline Rules",
                     style = MaterialTheme.typography.labelSmall,
-                    color = if (state.isListening) PrimaryCyan else TextMuted
+                    color = if (state.isListening || state.hasApiKey) PrimaryCyan else TextMuted
                 )
             }
         }
 
         Divider(color = SurfaceBorderDark, thickness = 1.dp)
+
+        if (!state.hasApiKey) {
+            Surface(
+                color = SurfaceDark,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "💡 Tip: Add your free Google AI Studio Gemini key in Settings for full conversational intelligence.",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = TextSecondary
+                    )
+                }
+            }
+            Divider(color = SurfaceBorderDark, thickness = 1.dp)
+        }
 
         // Conversation History
         LazyColumn(
@@ -131,6 +154,34 @@ fun AssistantScreen(
                             style = MaterialTheme.typography.bodyMedium,
                             color = if (isUser) Color.White else TextPrimary
                         )
+                    }
+                }
+            }
+
+            if (state.isThinking) {
+                item {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(SurfaceDark)
+                                .border(1.dp, PrimaryCyan.copy(alpha = 0.4f), RoundedCornerShape(16.dp))
+                                .padding(horizontal = 16.dp, vertical = 10.dp)
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(14.dp),
+                                    strokeWidth = 2.dp,
+                                    color = PrimaryCyan
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "PAOA is thinking...",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = TextSecondary
+                                )
+                            }
+                        }
                     }
                 }
             }

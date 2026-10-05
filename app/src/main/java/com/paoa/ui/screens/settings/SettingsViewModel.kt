@@ -3,6 +3,8 @@ package com.paoa.ui.screens.settings
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.paoa.core.ai.ApiKeyManager
+import com.paoa.core.ai.GeminiClient
 import com.paoa.core.device.DevicePermissionManager
 import com.paoa.core.security.DataExportManager
 import com.paoa.data.local.PAOADatabase
@@ -20,6 +22,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     private val memoryRepository = MemoryRepository(database)
     private val permissionManager = DevicePermissionManager(application)
     private val exportManager = DataExportManager(application, database)
+    private val apiKeyManager = ApiKeyManager(application)
 
     data class SettingsUiState(
         val defaultReminderMode: ReminderMode = ReminderMode.ALARM,
@@ -28,7 +31,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         val memories: List<MemoryFact> = emptyList(),
         val permissions: List<DevicePermissionManager.PermissionItem> = emptyList(),
         val exportJsonString: String? = null,
-        val messageBanner: String? = null
+        val messageBanner: String? = null,
+        val geminiApiKey: String = "",
+        val isTestingKey: Boolean = false,
+        val keyTestSuccess: Boolean? = null
     )
 
     private val _uiState = MutableStateFlow(SettingsUiState())
@@ -43,6 +49,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             val profile = memoryRepository.getProfile()
             val memories = memoryRepository.getActiveMemories()
             val perms = permissionManager.getPermissionsState()
+            val savedKey = apiKeyManager.getGeminiApiKey() ?: ""
 
             val mode = runCatching { ReminderMode.valueOf(profile.defaultReminderMode) }
                 .getOrDefault(ReminderMode.ALARM)
@@ -51,8 +58,48 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                 defaultReminderMode = mode,
                 bufferMinutes = profile.defaultBufferMinutes,
                 memories = memories,
-                permissions = perms
+                permissions = perms,
+                geminiApiKey = savedKey,
+                keyTestSuccess = if (savedKey.isNotBlank()) true else null
             )
+        }
+    }
+
+    fun saveGeminiApiKey(key: String) {
+        val trimmed = key.trim()
+        apiKeyManager.setGeminiApiKey(trimmed)
+        _uiState.value = _uiState.value.copy(
+            geminiApiKey = trimmed,
+            messageBanner = if (trimmed.isNotBlank()) "Gemini API Key saved. Conversational AI enabled!" else "API Key removed. Fallback to local rule engine.",
+            keyTestSuccess = if (trimmed.isNotBlank()) true else null
+        )
+    }
+
+    fun testGeminiApiKey(key: String) {
+        val trimmed = key.trim()
+        if (trimmed.isBlank()) {
+            _uiState.value = _uiState.value.copy(messageBanner = "Please enter an API key first.", keyTestSuccess = false)
+            return
+        }
+
+        _uiState.value = _uiState.value.copy(isTestingKey = true)
+        viewModelScope.launch {
+            val result = GeminiClient.testConnection(trimmed)
+            if (result.isSuccess) {
+                apiKeyManager.setGeminiApiKey(trimmed)
+                _uiState.value = _uiState.value.copy(
+                    isTestingKey = false,
+                    keyTestSuccess = true,
+                    geminiApiKey = trimmed,
+                    messageBanner = "✓ Connection test successful! PAOA is now powered by Gemini 2.0 Flash."
+                )
+            } else {
+                _uiState.value = _uiState.value.copy(
+                    isTestingKey = false,
+                    keyTestSuccess = false,
+                    messageBanner = "Connection test failed: ${result.exceptionOrNull()?.localizedMessage ?: "Invalid key or network error"}"
+                )
+            }
         }
     }
 
