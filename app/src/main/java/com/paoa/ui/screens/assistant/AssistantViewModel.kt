@@ -282,8 +282,28 @@ class AssistantViewModel(application: Application) : AndroidViewModel(applicatio
                 "Today you have completed $completed tasks, with $pending remaining. You are maintaining steady focus without overworking."
             }
 
+            is UserIntent.ConversationalChat -> {
+                intent.reply
+            }
+
+            is UserIntent.DeleteTask -> {
+                val matched = taskRepository.findTasksByTitle(intent.taskQuery).firstOrNull()
+                if (matched != null) {
+                    taskRepository.deleteTask(matched.id)
+                    alarmScheduler.cancelReminder(matched.id)
+                    "Removed '${matched.title}' and cleared its scheduled blocks from your calendar."
+                } else {
+                    "I couldn't find a task named '${intent.taskQuery}' to delete."
+                }
+            }
+
+            is UserIntent.ClearTasks -> {
+                taskRepository.clearAll()
+                "All tasks and schedule blocks have been cleared."
+            }
+
             is UserIntent.Unknown -> {
-                "I heard you. To schedule a task, try 'Study DSA for 2 hours tonight' or ask 'What should I do now?'."
+                "I'm here to help manage your schedule. To plan something, try saying 'Study DSA for 2 hours tonight' or ask 'What should I do now?'."
             }
         }
     }

@@ -97,5 +97,11 @@ sealed interface UserIntent {
 
     data object QueryProductivity : UserIntent
 
+    data class ConversationalChat(val reply: String) : UserIntent
+
+    data class DeleteTask(val taskQuery: String) : UserIntent
+
+    data object ClearTasks : UserIntent
+
     data class Unknown(val rawText: String) : UserIntent
 }

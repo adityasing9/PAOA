@@ -17,26 +17,37 @@ object IntentRouter {
         // 2. Try Layer 2 Lightweight NLP
         // If input contains task intention markers
         val lower = trimmed.lowercase()
-        val isTaskIntention = lower.startsWith("i need") ||
-                lower.startsWith("i have to") ||
-                lower.startsWith("i want to") ||
-                lower.startsWith("study") ||
-                lower.startsWith("work on") ||
-                lower.startsWith("prepare for") ||
-                lower.startsWith("run") ||
-                lower.contains("assignment") ||
-                lower.contains("exam") ||
-                lower.contains("for ") ||
-                lower.contains("tomorrow") ||
-                lower.contains("tonight")
+        val isExplicitTaskPrefix = lower.startsWith("i need to ") ||
+                lower.startsWith("i have to ") ||
+                lower.startsWith("i want to ") ||
+                lower.startsWith("i will ") ||
+                lower.startsWith("please schedule ") ||
+                lower.startsWith("schedule ") ||
+                lower.startsWith("plan ") ||
+                lower.startsWith("add task ")
+
+        val isActionKeyword = lower.startsWith("study ") ||
+                lower.startsWith("work on ") ||
+                lower.startsWith("prepare for ") ||
+                lower.startsWith("finish ") ||
+                lower.startsWith("code ") ||
+                lower.startsWith("workout ") ||
+                lower.startsWith("exercise ") ||
+                lower.startsWith("gym ") ||
+                lower.startsWith("run ") ||
+                lower.startsWith("read ")
+
+        val hasDurationOrTimeWithTaskContext = (lower.contains("assignment") || lower.contains("exam") || lower.contains("homework")) &&
+                (lower.contains("tomorrow") || lower.contains("tonight") || lower.contains("hour") || lower.contains("min") || lower.contains("due"))
+
+        val isTaskIntention = isExplicitTaskPrefix || isActionKeyword || hasDurationOrTimeWithTaskContext
 
         if (isTaskIntention) {
             return LightweightNlpParser.parseTaskCreation(trimmed)
         }
 
-        // Fallback to task creation with default title if short phrase
-        if (trimmed.split(" ").size <= 5 && !trimmed.endsWith("?")) {
-            return LightweightNlpParser.parseTaskCreation(trimmed)
+        if (trimmed.endsWith("?")) {
+            return UserIntent.ConversationalChat("I'm here to help you manage your day and focus. Ask 'What should I do now?' or tell me what to schedule (e.g. 'Study DSA for 2 hours tonight').")
         }
 
         return UserIntent.Unknown(trimmed)

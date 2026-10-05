@@ -71,4 +71,48 @@ class DeterministicCommandEngineTest {
         val pref = result as UserIntent.UpdatePreference
         assertEquals("disliked_routine", pref.key)
     }
+
+    @Test
+    fun testConversationalGreetings() {
+        val hi = DeterministicCommandEngine.parse("hi")
+        assertTrue(hi is UserIntent.ConversationalChat)
+
+        val hello = DeterministicCommandEngine.parse("hello 🤗")
+        assertTrue(hello is UserIntent.ConversationalChat)
+
+        val hey = DeterministicCommandEngine.parse("hey there")
+        assertTrue(hey is UserIntent.ConversationalChat)
+    }
+
+    @Test
+    fun testFrustrationAndCasualResponses() {
+        val wtf = DeterministicCommandEngine.parse("wtf")
+        assertTrue(wtf is UserIntent.ConversationalChat)
+
+        val howAreYou = DeterministicCommandEngine.parse("how are you?")
+        assertTrue(howAreYou is UserIntent.ConversationalChat)
+
+        val whoAreYou = DeterministicCommandEngine.parse("who are you")
+        assertTrue(whoAreYou is UserIntent.ConversationalChat)
+    }
+
+    @Test
+    fun testDeleteTaskCommand() {
+        val del = DeterministicCommandEngine.parse("delete task DSA")
+        assertTrue(del is UserIntent.DeleteTask)
+        assertEquals("DSA", (del as UserIntent.DeleteTask).taskQuery)
+
+        val cancel = DeterministicCommandEngine.parse("cancel task DBMS")
+        assertTrue(cancel is UserIntent.DeleteTask)
+        assertEquals("DBMS", (cancel as UserIntent.DeleteTask).taskQuery)
+    }
+
+    @Test
+    fun testClearTasksCommand() {
+        val clear = DeterministicCommandEngine.parse("clear all tasks")
+        assertTrue(clear is UserIntent.ClearTasks)
+
+        val clear2 = DeterministicCommandEngine.parse("delete all tasks")
+        assertTrue(clear2 is UserIntent.ClearTasks)
+    }
 }

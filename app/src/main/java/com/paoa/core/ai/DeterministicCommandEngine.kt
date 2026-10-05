@@ -43,12 +43,79 @@ object DeterministicCommandEngine {
     )
 
     private val PREFERENCE_UPDATE_PATTERN = Pattern.compile(
-        "^i\\s+(don't\\s+like|prefer|want|hate)\\s+(.+?)(?:\\s+anymore)?$",
+        "^i\\s+(don't\\s+like|prefer|hate)\\s+(.+?)(?:\\s+anymore)?$",
+        Pattern.CASE_INSENSITIVE
+    )
+
+    private val GREETING_PATTERN = Pattern.compile(
+        "^(hi|hello|hey|hiya|yo|good\\s+(?:morning|afternoon|evening|day)|greetings)(?:\\s+(?:there|mate|paoa|assistant|friend))?[!.,?\\s\\p{So}\\p{Sk}\\p{Sm}]*$",
+        Pattern.CASE_INSENSITIVE
+    )
+
+    private val HOW_ARE_YOU_PATTERN = Pattern.compile(
+        "^(how\\s+are\\s+you(?:\\s+doing)?|how's\\s+it\\s+going|how\\s+do\\s+you\\s+feel)\\??$",
+        Pattern.CASE_INSENSITIVE
+    )
+
+    private val WHO_ARE_YOU_PATTERN = Pattern.compile(
+        "^(who\\s+are\\s+you|what\\s+are\\s+you|what\\s+can\\s+you\\s+do|help)\\??$",
+        Pattern.CASE_INSENSITIVE
+    )
+
+    private val FRUSTRATION_PATTERN = Pattern.compile(
+        "^(wtf|what\\s+the\\s+(?:fuck|hell)|what\\??|huh\\??|are\\s+you\\s+(?:crazy|serious|dumb)|why\\s+did\\s+you\\s+do\\s+that)[!.,?\\s]*$",
+        Pattern.CASE_INSENSITIVE
+    )
+
+    private val THANKS_PATTERN = Pattern.compile(
+        "^(thanks|thank\\s+you|thx|cool|awesome|great|ok|okay)[!.,?\\s]*$",
+        Pattern.CASE_INSENSITIVE
+    )
+
+    private val CLEAR_TASKS_PATTERN = Pattern.compile(
+        "^(?:clear|delete|remove|wipe)\\s+(?:all\\s+)?(?:tasks|activities|schedule)$",
+        Pattern.CASE_INSENSITIVE
+    )
+
+    private val DELETE_TASK_PATTERN = Pattern.compile(
+        "^(?:delete|remove|cancel|drop)\\s+(?:task\\s+)?(.+?)$",
         Pattern.CASE_INSENSITIVE
     )
 
     fun parse(input: String): UserIntent? {
         val trimmed = input.trim()
+
+        if (GREETING_PATTERN.matcher(trimmed).matches()) {
+            return UserIntent.ConversationalChat("Hey! What's on your mind? Tell me what you'd like to plan, or ask 'What should I do now?'.")
+        }
+
+        if (HOW_ARE_YOU_PATTERN.matcher(trimmed).matches()) {
+            return UserIntent.ConversationalChat("I'm running smoothly on-device! How can I help you manage your focus or plans today?")
+        }
+
+        if (WHO_ARE_YOU_PATTERN.matcher(trimmed).matches()) {
+            return UserIntent.ConversationalChat("I am your personal AI operating assistant. You can tell me to schedule tasks ('Study DSA tonight for 2 hours'), reschedule ('I'm busy from 5 to 8'), check what to focus on ('What should I do now?'), or review your habits.")
+        }
+
+        if (FRUSTRATION_PATTERN.matcher(trimmed).matches()) {
+            return UserIntent.ConversationalChat("Sorry about that! I won't schedule anything unless you ask. Tell me what you'd like to do, or ask 'What should I do now?'. You can also say 'clear tasks' to remove unintended tasks.")
+        }
+
+        if (THANKS_PATTERN.matcher(trimmed).matches()) {
+            return UserIntent.ConversationalChat("Glad to help! Let me know whenever your plans change.")
+        }
+
+        if (CLEAR_TASKS_PATTERN.matcher(trimmed).matches()) {
+            return UserIntent.ClearTasks
+        }
+
+        val delMatcher = DELETE_TASK_PATTERN.matcher(trimmed)
+        if (delMatcher.matches()) {
+            val name = delMatcher.group(1)?.trim() ?: ""
+            if (name.isNotEmpty() && !name.equals("all", ignoreCase = true)) {
+                return UserIntent.DeleteTask(taskQuery = name)
+            }
+        }
 
         if (WHAT_NOW_PATTERN.matcher(trimmed).matches()) {
             return UserIntent.WhatShouldIDoNow

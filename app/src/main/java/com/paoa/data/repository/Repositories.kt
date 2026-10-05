@@ -52,8 +52,14 @@ class TaskRepository(private val database: PAOADatabase) {
         taskDao.incrementPostponement(id)
     }
 
+    suspend fun deleteTask(id: Long) {
+        taskDao.deleteTaskById(id)
+        database.scheduleBlockDao().deleteBlocksForTask(id)
+    }
+
     suspend fun clearAll() {
         taskDao.clearAll()
+        database.scheduleBlockDao().clearAll()
     }
 }
 

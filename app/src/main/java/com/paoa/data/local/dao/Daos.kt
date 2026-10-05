@@ -40,6 +40,9 @@ interface TaskDao {
     @Query("SELECT * FROM tasks ORDER BY createdAt DESC")
     suspend fun getAllTasks(): List<TaskEntity>
 
+    @Query("DELETE FROM tasks WHERE id = :id")
+    suspend fun deleteTaskById(id: Long)
+
     @Query("DELETE FROM tasks")
     suspend fun clearAll()
 }
